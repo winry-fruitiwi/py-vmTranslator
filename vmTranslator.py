@@ -17,11 +17,22 @@ class Parser:
             stripped_line = line.strip("\n")
             print(f'{stripped_line}')
 
+    # reads the current line
+    def read_current_line(self):
+        stripped_line = self.currentLine.strip("\n")
+        print(f'{stripped_line}')
+        self.advance()
+
+    # advances to the next line
+    def advance(self):
+        self.currentLineIndex += 1
+        self.currentLine = self.lines[self.currentLineIndex]
+
     # check if there are more lines to read.
     def has_more_commands(self):
         return self.currentLineIndex < len(self.lines) - 1
 
 
 parser = Parser()
-parser.read_file()
-print(parser.has_more_commands())
+while parser.has_more_commands():
+    parser.read_current_line()
