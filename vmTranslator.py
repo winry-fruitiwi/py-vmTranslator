@@ -2,9 +2,22 @@
 class Parser:
     def __init__(self):
         # opens an input file.
-        lines = open("vm/SimpleAdd.vm", "r")
-        self.lines = lines.readlines()
+        lines = open("vm/Test.vm", "r")
+        line_array = lines.readlines()
         self.currentLineIndex = 0
+        self.lines = []
+
+        # now it's time to clean up self.lines!
+        for line in line_array:
+            try:
+                # if the line is a comment or whitespace, move on.
+                if (line[0] == "/" and line[1] == "/") or len(line) == 0:
+                    continue
+            except IndexError:
+                pass
+            stripped_line = line.strip(" ").strip("\n")
+            self.lines.append(stripped_line)
+
         # the current line is whatever is at the current line index.
         self.currentLine = self.lines[self.currentLineIndex]
 
@@ -14,25 +27,62 @@ class Parser:
     # read the input file.
     def read_file(self):
         for line in self.lines:
-            stripped_line = line.strip("\n")
+            stripped_line = line.strip(" ").strip("\n")
             print(f'{stripped_line}')
 
     # reads the current line
     def read_current_line(self):
-        stripped_line = self.currentLine.strip("\n")
+        stripped_line = self.currentLine.strip(" ").strip("\n")
         print(f'{stripped_line}')
         self.advance()
 
     # advances to the next line
     def advance(self):
-        self.currentLineIndex += 1
-        self.currentLine = self.lines[self.currentLineIndex]
+        try:
+            self.currentLineIndex += 1
+            self.currentLine = self.lines[self.currentLineIndex]
+        except IndexError:
+            pass
 
     # check if there are more lines to read.
     def has_more_commands(self):
-        return self.currentLineIndex < len(self.lines) - 1
+        return self.currentLineIndex <= len(self.lines) - 1
+
+    # determines type of command
+    def command_type(self):
+        stripped_line = self.currentLine.strip(" ").strip("\n")
+        arithmetic_strings = [
+            "add",
+            "sub",
+            "neg",
+            "eq",
+            "gt",
+            "lt",
+            "and",
+            "or",
+            "not"
+        ]
+        # C_LABEL, C_GOTO, C_IF, C_FUNCTION, C_RETURN, C_CALL are handled later
+
+        # we don't need this line because if we're not doing arithmetic,
+        # we must be doing memory access. We will need this later.
+        # memory_access_strings = ["push", "pop"]
+
+        # arithmetic
+        math = [ele for ele in arithmetic_strings if (ele in stripped_line)]
+        push = [ele for ele in ["push"] if (ele in stripped_line)]
+
+        if math:
+            return "C_ARITHMETIC"
+        elif push:
+            return "C_PUSH"
+        else:
+            return "C_POP"
 
 
 parser = Parser()
+parser.read_file()
+
 while parser.has_more_commands():
-    parser.read_current_line()
+    print(parser.command_type())
+    parser.advance()

@@ -1,0 +1,5 @@
+push constant 1
+add
+sub
+neg
+pop local 1
