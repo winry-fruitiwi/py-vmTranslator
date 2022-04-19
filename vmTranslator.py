@@ -1,3 +1,7 @@
+# add a blank line between the file path and new prints!
+print()
+
+
 # this parses the input file and hands it to a currently nonexistent CodeWriter
 class Parser:
     def __init__(self):
@@ -79,10 +83,28 @@ class Parser:
         else:
             return "C_POP"
 
+    # find the first argument of the current line
+    def arg1(self):
+        line_components = self.currentLine.split(" ")
+        return line_components[0]
+
+    # find the first argument of the current line
+    def arg2(self):
+        try:
+            # this should work for memory access, function, and call statements.
+            line_components = self.currentLine.split(" ")
+            return line_components[1]
+        except IndexError as e:
+            # if I have incorrect logic in my code, I can return the error.
+            # then, I can check the error message and see what I should do with
+            # my error. If it's an index error, then I terminate the program.
+            return str(e)
+
 
 parser = Parser()
 parser.read_file()
+print()
 
 while parser.has_more_commands():
-    print(parser.command_type())
+    print(parser.arg1() + " " + parser.arg2())
     parser.advance()
