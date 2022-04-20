@@ -1,5 +1,9 @@
-push constant 1
 add
 sub
 neg
-pop local 1
+eq
+gt
+lt
+and
+or
+not
