@@ -12,4 +12,4 @@ class CodeWriter:
         pass
 
     # the specs say that we need to close the output file, but I'm not writing
-    # into it during this project because it's still just as fast to copy-paste!
+    # into it during this project because I'm not opening the output file!
