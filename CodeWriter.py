@@ -141,27 +141,105 @@ class CodeWriter:
         command_breakdown = command.split(" ")
         assembly = f"\n// {command}\n"
 
+        i = command_breakdown[2]
+
         if command_breakdown[0] == "push":
-            pass
+            if command_breakdown[1] == "argument":
+                assembly += f"@{i}\n" \
+                            "D=A\n" \
+                            "@ARG\n" \
+                            "A=M\n" \
+                            "D=D+A\n" \
+                            "@SP\n" \
+                            "A=M\n" \
+                            "M=D\n" \
+                            "@SP\n" \
+                            "M=M+1\n"
+
+            if command_breakdown[1] == "this":
+                assembly += f"@{i}\n" \
+                            "D=A\n" \
+                            "@THIS\n" \
+                            "A=M\n" \
+                            "D=D+A\n" \
+                            "@SP\n" \
+                            "A=M\n" \
+                            "M=D\n" \
+                            "@SP\n" \
+                            "M=M+1\n"
+
+            if command_breakdown[1] == "that":
+                assembly += f"@{i}\n" \
+                            "D=A\n" \
+                            "@THAT\n" \
+                            "A=M\n" \
+                            "D=D+A\n" \
+                            "@SP\n" \
+                            "A=M\n" \
+                            "M=D\n" \
+                            "@SP\n" \
+                            "M=M+1\n"
+
+            if command_breakdown[1] == "local":
+                assembly += f"@{i}\n" \
+                            "D=A\n" \
+                            "@LCL\n" \
+                            "A=M\n" \
+                            "D=D+A\n" \
+                            "@SP\n" \
+                            "A=M\n" \
+                            "M=D\n" \
+                            "@SP\n" \
+                            "M=M+1\n"
+
+            if command_breakdown[1] == "temp":
+                assembly += f"@{i}\n" \
+                            "D=A\n" \
+                            "@5\n" \
+                            "A=M\n" \
+                            "D=D+A\n" \
+                            "@SP\n" \
+                            "A=M\n" \
+                            "M=D\n" \
+                            "@SP\n" \
+                            "M=M+1\n"
+
+            if command_breakdown[1] == "static":
+                assembly += f"@file.{i}\n" \
+                            "D=M\n" \
+                            "@SP\n" \
+                            "A=M\n" \
+                            "M=D\n" \
+                            "@SP\n" \
+                            "M=M+1"
+
+            if command_breakdown[1] == "constant":
+                assembly += f"@i"   \
+                            "D=M"   \
+                            "@SP"   \
+                            "A=M"   \
+                            "M=D"   \
+                            "@SP"   \
+                            "M=M+1"
 
         elif command_breakdown[0] == "pop":
             if command_breakdown[1] == "argument":
-                assembly += f"@{command_breakdown[2]}\n"   \
-                            "D=A\n"   \
-                            "@LCL\n"   \
-                            "D=M+D\n"   \
-                            "@R13\n"   \
-                            "M=D\n"   \
-                            "@SP\n"   \
-                            "M=M-1\n"   \
-                            "A=M\n"   \
-                            "D=M\n"   \
-                            "@R13\n"   \
-                            "A=M\n"   \
+                assembly += f"@{i}\n" \
+                            "D=A\n" \
+                            "@LCL\n" \
+                            "D=M+D\n" \
+                            "@R13\n" \
+                            "M=D\n" \
+                            "@SP\n" \
+                            "M=M-1\n" \
+                            "A=M\n" \
+                            "D=M\n" \
+                            "@R13\n" \
+                            "A=M\n" \
                             "M=D\n"
 
             elif command_breakdown[1] == "local":
-                assembly += f"@{command_breakdown[2]}\n" \
+                assembly += f"@{i}\n" \
                             "D=A\n" \
                             "@ARG\n" \
                             "D=M+D\n" \
@@ -176,7 +254,7 @@ class CodeWriter:
                             "M=D\n"
 
             elif command_breakdown[1] == "this":
-                assembly += f"@{command_breakdown[2]}\n" \
+                assembly += f"@{i}\n" \
                             "D=A\n" \
                             "@THIS\n" \
                             "D=M+D\n" \
@@ -191,7 +269,7 @@ class CodeWriter:
                             "M=D\n"
 
             elif command_breakdown[1] == "that":
-                assembly += f"@{command_breakdown[2]}\n" \
+                assembly += f"@{i}\n" \
                             "D=A\n" \
                             "@THAT\n" \
                             "D=M+D\n" \
@@ -206,7 +284,7 @@ class CodeWriter:
                             "M=D\n"
 
             elif command_breakdown[1] == "temp":
-                assembly += f"@{command_breakdown[2]}\n" \
+                assembly += f"@{i}\n" \
                             "D=A\n" \
                             "@5\n" \
                             "D=M+D\n" \
@@ -224,7 +302,7 @@ class CodeWriter:
                 assembly += "@SP\n" \
                             "AM=M-1\n" \
                             "D=M\n" \
-                            f"@file.{command_breakdown[2]}\n" \
+                            f"@file.{i}\n" \
                             "M=D\n"
 
             elif command_breakdown[1] == "pointer":
@@ -245,11 +323,11 @@ class CodeWriter:
                                 "@SP\n" \
                                 "M=M+1\n"
 
-            print(assembly)
+        print(assembly)
 
     # the specs say that we need to close the output file, but I'm not writing
     # into it during this project because I'm not opening the output file!
 
 
 code_writer = CodeWriter()
-code_writer.translate_mem_access("pop pointer 0")
+code_writer.translate_mem_access("push argument 0")

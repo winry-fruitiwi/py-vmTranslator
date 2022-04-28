@@ -37,8 +37,8 @@ class Parser:
     # reads the current line
     def read_current_line(self):
         stripped_line = self.currentLine.strip(" ").strip("\n")
-        print(f'{stripped_line}')
         self.advance()
+        print(f'{stripped_line}')
 
     # advances to the next line
     def advance(self):
@@ -73,13 +73,18 @@ class Parser:
         # memory_access_strings = ["push", "pop"]
 
         # arithmetic
+
+        # for every element in arithmetic_strings, if it matches the command,
+        # return "C_ARITHMETIC" later on in the code.
         math = [ele for ele in arithmetic_strings if (ele in stripped_line)]
-        push = [ele for ele in ["push"] if (ele in stripped_line)]
+
+        split_line = stripped_line.split(" ")
+        for argument in split_line:
+            if argument == "push":
+                return "C_PUSH"
 
         if math:
             return "C_ARITHMETIC"
-        elif push:
-            return "C_PUSH"
         else:
             return "C_POP"
 
