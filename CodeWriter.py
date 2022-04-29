@@ -1,11 +1,12 @@
 # noinspection PyMethodMayBeStatic
 
-# this class writes code into the console to be added to results.asm.
+# this class writes code into the console to be added to SimpleAdd.asm.
 
 
 class CodeWriter:
     def __init__(self):
-        pass
+        # keep track of the comparisons, which have labels
+        self.comparison_number = 0
 
     # translates arithmetic code, with a command type of C_ARITHMETIC.
     def translate_arithmetic(self, command):
@@ -14,7 +15,7 @@ class CodeWriter:
         if command == "neg":
             assembly += "@SP\n" \
                         "A=M-1\n" \
-                        "D=M\n"
+                        "M=-M\n"
 
         elif command == "not":
             assembly += "@SP\n" \
@@ -61,78 +62,81 @@ class CodeWriter:
                         "@SP\n" \
                         "A=M-1\n" \
                         "A=A-1\n" \
-                        "M=D-M\n" \
+                        "M=M-D\n" \
                         "@SP\n" \
                         "M=M-1\n"
 
         elif command == "eq":
-            assembly += "@SP\n" \
-                        "AM=M-1\n" \
-                        "D=M\n" \
-                        "@SP\n" \
-                        "A=M-1\n" \
-                        "D=M-D\n" \
-                        "@JUMP.TRUE\n" \
-                        "D;JEQ\n" \
-                        "@JUMP.FALSE\n" \
-                        "0;JMP\n" \
-                        "(JUMP.TRUE)\n" \
-                        "@SP\n" \
-                        "A=M-1\n" \
-                        "M=-1\n" \
-                        "@END\n" \
-                        "0;JMP\n" \
-                        "(JUMP.FALSE)\n" \
-                        "@SP\n" \
-                        "A=M-1\n" \
-                        "M=0\n" \
-                        "(END)\n"
+            assembly += f"@SP\n" \
+                        f"AM=M-1\n" \
+                        f"D=M\n" \
+                        f"@SP\n" \
+                        f"A=M-1\n" \
+                        f"D=M-D\n" \
+                        f"@JUMP{self.comparison_number}.TRUE\n" \
+                        f"D;JEQ\n" \
+                        f"@JUMP{self.comparison_number}.FALSE\n" \
+                        f"0;JMP\n" \
+                        f"(JUMP{self.comparison_number}.TRUE)\n" \
+                        f"@SP\n" \
+                        f"A=M-1\n" \
+                        f"M=-1\n" \
+                        f"@EN{self.comparison_number}D\n" \
+                        f"0;JMP\n" \
+                        f"(JUMP{self.comparison_number}.FALSE)\n" \
+                        f"@SP\n" \
+                        f"A=M-1\n" \
+                        f"M=0\n" \
+                        f"(EN{self.comparison_number}D)\n"
+            self.comparison_number += 1
 
         elif command == "lt":
-            assembly += "@SP\n" \
-                        "AM=M-1\n" \
-                        "D=M\n" \
-                        "@SP\n" \
-                        "A=M-1\n" \
-                        "D=M-D\n" \
-                        "@JUMP.TRUE\n" \
-                        "D;JLT\n" \
-                        "@JUMP.FALSE\n" \
-                        "0;JMP\n" \
-                        "(JUMP.TRUE)\n" \
-                        "@SP\n" \
-                        "A=M-1\n" \
-                        "M=-1\n" \
-                        "@END\n" \
-                        "0;JMP\n" \
-                        "(JUMP.FALSE)\n" \
-                        "@SP\n" \
-                        "A=M-1\n" \
-                        "M=0\n" \
-                        "(END)\n"
+            assembly += f"@SP\n" \
+                        f"AM=M-1\n" \
+                        f"D=M\n" \
+                        f"@SP\n" \
+                        f"A=M-1\n" \
+                        f"D=M-D\n" \
+                        f"@JUMP{self.comparison_number}.TRUE\n" \
+                        f"D;JLT\n" \
+                        f"@JUMP{self.comparison_number}.FALSE\n" \
+                        f"0;JMP\n" \
+                        f"(JUMP{self.comparison_number}.TRUE)\n" \
+                        f"@SP\n" \
+                        f"A=M-1\n" \
+                        f"M=-1\n" \
+                        f"@EN{self.comparison_number}D\n" \
+                        f"0;JMP\n" \
+                        f"(JUMP{self.comparison_number}.FALSE)\n" \
+                        f"@SP\n" \
+                        f"A=M-1\n" \
+                        f"M=0\n" \
+                        f"(EN{self.comparison_number}D)\n"
+            self.comparison_number += 1
 
         elif command == "gt":
-            assembly += "@SP\n" \
-                        "AM=M-1\n" \
-                        "D=M\n" \
-                        "@SP\n" \
-                        "A=M-1\n" \
-                        "D=M-D\n" \
-                        "@JUMP.TRUE\n" \
-                        "D;JGT\n" \
-                        "@JUMP.FALSE\n" \
-                        "0;JMP\n" \
-                        "(JUMP.TRUE)\n" \
-                        "@SP\n" \
-                        "A=M-1\n" \
-                        "M=-1\n" \
-                        "@END\n" \
-                        "0;JMP\n" \
-                        "(JUMP.FALSE)\n" \
-                        "@SP\n" \
-                        "A=M-1\n" \
-                        "M=0\n" \
-                        "(END)\n"
+            assembly += f"@SP\n" \
+                        f"AM=M-1\n" \
+                        f"D=M\n" \
+                        f"@SP\n" \
+                        f"A=M-1\n" \
+                        f"D=M-D\n" \
+                        f"@JUMP{self.comparison_number}.TRUE\n" \
+                        f"D;JGT\n" \
+                        f"@JUMP{self.comparison_number}.FALSE\n" \
+                        f"0;JMP\n" \
+                        f"(JUMP{self.comparison_number}.TRUE)\n" \
+                        f"@SP\n" \
+                        f"A=M-1\n" \
+                        f"M=-1\n" \
+                        f"@EN{self.comparison_number}D\n" \
+                        f"0;JMP\n" \
+                        f"(JUMP{self.comparison_number}.FALSE)\n" \
+                        f"@SP\n" \
+                        f"A=M-1\n" \
+                        f"M=0\n" \
+                        f"(EN{self.comparison_number}D)\n"
+            self.comparison_number += 1
 
         print(assembly)
 
@@ -140,6 +144,8 @@ class CodeWriter:
     def translate_mem_access(self, command):
         command_breakdown = command.split(" ")
         assembly = f"\n// {command}\n"
+
+        # print(command_breakdown)
 
         i = command_breakdown[2]
 
@@ -156,7 +162,7 @@ class CodeWriter:
                             "@SP\n" \
                             "M=M+1\n"
 
-            if command_breakdown[1] == "this":
+            elif command_breakdown[1] == "this":
                 assembly += f"@{i}\n" \
                             "D=A\n" \
                             "@THIS\n" \
@@ -168,7 +174,7 @@ class CodeWriter:
                             "@SP\n" \
                             "M=M+1\n"
 
-            if command_breakdown[1] == "that":
+            elif command_breakdown[1] == "that":
                 assembly += f"@{i}\n" \
                             "D=A\n" \
                             "@THAT\n" \
@@ -180,7 +186,7 @@ class CodeWriter:
                             "@SP\n" \
                             "M=M+1\n"
 
-            if command_breakdown[1] == "local":
+            elif command_breakdown[1] == "local":
                 assembly += f"@{i}\n" \
                             "D=A\n" \
                             "@LCL\n" \
@@ -192,7 +198,7 @@ class CodeWriter:
                             "@SP\n" \
                             "M=M+1\n"
 
-            if command_breakdown[1] == "temp":
+            elif command_breakdown[1] == "temp":
                 assembly += f"@{i}\n" \
                             "D=A\n" \
                             "@5\n" \
@@ -204,7 +210,7 @@ class CodeWriter:
                             "@SP\n" \
                             "M=M+1\n"
 
-            if command_breakdown[1] == "static":
+            elif command_breakdown[1] == "static":
                 assembly += f"@file.{i}\n" \
                             "D=M\n" \
                             "@SP\n" \
@@ -213,14 +219,32 @@ class CodeWriter:
                             "@SP\n" \
                             "M=M+1"
 
-            if command_breakdown[1] == "constant":
-                assembly += f"@i"   \
-                            "D=M"   \
-                            "@SP"   \
-                            "A=M"   \
-                            "M=D"   \
-                            "@SP"   \
-                            "M=M+1"
+            elif command_breakdown[1] == "constant":
+                assembly += f"@{i}\n"   \
+                            "D=A\n"   \
+                            "@SP\n"   \
+                            "A=M\n"   \
+                            "M=D\n"   \
+                            "@SP\n"   \
+                            "M=M+1\n"
+
+            elif command_breakdown[1] == "pointer":
+                if command_breakdown[2] == "0":
+                    assembly += "@THIS\n" \
+                                "D=M\n" \
+                                "@SP\n" \
+                                "A=M\n" \
+                                "M=D\n" \
+                                "@SP\n" \
+                                "M=M+1\n"
+                else:
+                    assembly += "@THAT\n" \
+                                "D=M\n" \
+                                "@SP\n" \
+                                "A=M\n" \
+                                "M=D\n" \
+                                "@SP\n" \
+                                "M=M+1\n"
 
         elif command_breakdown[0] == "pop":
             if command_breakdown[1] == "argument":
@@ -307,27 +331,19 @@ class CodeWriter:
 
             elif command_breakdown[1] == "pointer":
                 if command_breakdown[2] == "0":
-                    assembly += "@THIS\n" \
+                    assembly += "@SP\n" \
+                                "AM=M-1\n" \
                                 "D=M\n" \
-                                "@SP\n" \
-                                "A=M\n" \
-                                "M=D\n" \
-                                "@SP\n" \
-                                "M=M+1\n"
+                                "@THIS\n" \
+                                "M=D\n"
                 else:
-                    assembly += "@THAT\n" \
+                    assembly += "@SP\n" \
+                                "AM=M-1\n" \
                                 "D=M\n" \
-                                "@SP\n" \
-                                "A=M\n" \
-                                "M=D\n" \
-                                "@SP\n" \
-                                "M=M+1\n"
+                                "@THAT\n" \
+                                "M=D\n"
 
         print(assembly)
 
     # the specs say that we need to close the output file, but I'm not writing
     # into it during this project because I'm not opening the output file!
-
-
-code_writer = CodeWriter()
-code_writer.translate_mem_access("push argument 0")

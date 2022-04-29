@@ -4,22 +4,25 @@ print()
 
 # this parses the input file and hands it to a currently nonexistent CodeWriter
 class Parser:
-    def __init__(self):
-        # opens an input file.
-        lines = open("vm/Test.vm", "r")
+    def __init__(self, file):
+        # opens the input file.
+        lines = open(file, "r")
         line_array = lines.readlines()
         self.currentLineIndex = 0
         self.lines = []
 
         # now it's time to clean up self.lines!
         for line in line_array:
+            stripped_line = line.strip(" ").strip("\n")
             try:
                 # if the line is a comment or whitespace, move on.
-                if (line[0] == "/" and line[1] == "/") or len(line) == 0:
+                if len(line) == 1 or (line[0] == "/" and line[1] == "/"):
+                    # print("filtered!")
                     continue
             except IndexError:
-                pass
-            stripped_line = line.strip(" ").strip("\n")
+                # print("filtered!")
+                continue
+
             self.lines.append(stripped_line)
 
         # the current line is whatever is at the current line index.
@@ -27,6 +30,7 @@ class Parser:
 
         # we only need the file array, not the file itself, so we can close it.
         lines.close()
+        # print(self.lines)
 
     # read the input file.
     def read_file(self):
@@ -106,10 +110,10 @@ class Parser:
             return str(e)
 
 
-parser = Parser()
-parser.read_file()
-print()
-
-while parser.has_more_commands():
-    print(parser.arg1() + " " + parser.arg2())
-    parser.advance()
+# parser = Parser("vm/Test.vm")
+# parser.read_file()
+# print()
+#
+# while parser.has_more_commands():
+#     print(parser.arg1() + " " + parser.arg2())
+#     parser.advance()
