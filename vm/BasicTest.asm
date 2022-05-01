@@ -11,7 +11,7 @@ M=M+1
 // pop local 0
 @0
 D=A
-@ARG
+@LCL
 D=M+D
 @R13
 M=D
@@ -47,7 +47,7 @@ M=M+1
 // pop argument 2
 @2
 D=A
-@LCL
+@ARG
 D=M+D
 @R13
 M=D
@@ -63,7 +63,7 @@ M=D
 // pop argument 1
 @1
 D=A
-@LCL
+@ARG
 D=M+D
 @R13
 M=D
@@ -168,7 +168,7 @@ M=M+1
 @6
 D=A
 @5
-D=M+D
+D=A+D
 @R13
 M=D
 @SP
@@ -293,8 +293,8 @@ M=M-1
 @6
 D=A
 @5
-A=M
-D=D+A
+A=D+A
+D=M
 @SP
 A=M
 M=D

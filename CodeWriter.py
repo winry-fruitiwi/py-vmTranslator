@@ -147,6 +147,7 @@ class CodeWriter:
 
         # print(command_breakdown)
 
+        # a shorter name for command_breakdown[2]
         i = command_breakdown[2]
 
         if command_breakdown[0] == "push":
@@ -202,8 +203,8 @@ class CodeWriter:
                 assembly += f"@{i}\n" \
                             "D=A\n" \
                             "@5\n" \
-                            "A=M\n" \
-                            "D=D+A\n" \
+                            "A=D+A\n" \
+                            "D=M\n" \
                             "@SP\n" \
                             "A=M\n" \
                             "M=D\n" \
@@ -250,7 +251,7 @@ class CodeWriter:
             if command_breakdown[1] == "argument":
                 assembly += f"@{i}\n" \
                             "D=A\n" \
-                            "@LCL\n" \
+                            "@ARG\n" \
                             "D=M+D\n" \
                             "@R13\n" \
                             "M=D\n" \
@@ -265,7 +266,7 @@ class CodeWriter:
             elif command_breakdown[1] == "local":
                 assembly += f"@{i}\n" \
                             "D=A\n" \
-                            "@ARG\n" \
+                            "@LCL\n" \
                             "D=M+D\n" \
                             "@R13\n" \
                             "M=D\n" \
@@ -311,7 +312,7 @@ class CodeWriter:
                 assembly += f"@{i}\n" \
                             "D=A\n" \
                             "@5\n" \
-                            "D=M+D\n" \
+                            "D=A+D\n" \
                             "@R13\n" \
                             "M=D\n" \
                             "@SP\n" \
@@ -330,7 +331,7 @@ class CodeWriter:
                             "M=D\n"
 
             elif command_breakdown[1] == "pointer":
-                if command_breakdown[2] == "0":
+                if i == "0":
                     assembly += "@SP\n" \
                                 "AM=M-1\n" \
                                 "D=M\n" \
